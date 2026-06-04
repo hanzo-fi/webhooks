@@ -13,18 +13,18 @@ type GetManyConfigsRequest struct {
 	Endpoint *string `queryParam:"style=form,explode=true,name=endpoint"`
 }
 
-func (o *GetManyConfigsRequest) GetID() *string {
-	if o == nil {
+func (g *GetManyConfigsRequest) GetID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ID
+	return g.ID
 }
 
-func (o *GetManyConfigsRequest) GetEndpoint() *string {
-	if o == nil {
+func (g *GetManyConfigsRequest) GetEndpoint() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Endpoint
+	return g.Endpoint
 }
 
 type GetManyConfigsResponse struct {
@@ -33,16 +33,16 @@ type GetManyConfigsResponse struct {
 	ConfigsResponse *components.ConfigsResponse
 }
 
-func (o *GetManyConfigsResponse) GetHTTPMeta() components.HTTPMetadata {
-	if o == nil {
+func (g *GetManyConfigsResponse) GetHTTPMeta() components.HTTPMetadata {
+	if g == nil {
 		return components.HTTPMetadata{}
 	}
-	return o.HTTPMeta
+	return g.HTTPMeta
 }
 
-func (o *GetManyConfigsResponse) GetConfigsResponse() *components.ConfigsResponse {
-	if o == nil {
+func (g *GetManyConfigsResponse) GetConfigsResponse() *components.ConfigsResponse {
+	if g == nil {
 		return nil
 	}
-	return o.ConfigsResponse
+	return g.ConfigsResponse
 }

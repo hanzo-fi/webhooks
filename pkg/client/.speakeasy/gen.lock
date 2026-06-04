@@ -1,102 +1,187 @@
 lockVersion: 2.0.0
 id: 32d27b3c-3111-406b-93c0-0ff757cb4a42
 management:
-  docChecksum: 0e2314059989cedcfe532c2779d6d0b0
+  docChecksum: 772c34f33119b23654473050f5a32b2c
   docVersion: WEBHOOKS_VERSION
-  speakeasyVersion: 1.351.0
-  generationVersion: 2.384.1
-  releaseVersion: 0.2.1
-  configChecksum: 594ac984c6578789b2d8016b402879b3
+  speakeasyVersion: 1.661.3
+  generationVersion: 2.763.3
+  releaseVersion: 0.3.0
+  configChecksum: 01a6337b00259a322dd57487430912ab
 features:
   go:
     additionalDependencies: 0.1.0
-    core: 3.5.2
+    core: 3.13.3
     defaultEnabledRetries: 0.2.0
-    envVarSecurityUsage: 0.2.1
-    errors: 2.81.9
-    globalSecurity: 2.82.9
+    envVarSecurityUsage: 0.3.2
+    errors: 2.83.0
+    globalSecurity: 2.82.12
     globalSecurityCallbacks: 0.1.0
-    globalServerURLs: 2.82.2
+    globalServerURLs: 2.83.0
     intellisenseMarkdownSupport: 0.1.0
-    oauth2ClientCredentials: 0.1.1
+    oauth2ClientCredentials: 1.1.0
     responseFormat: 0.1.2
-    retries: 2.83.0
-    sdkHooks: 0.1.0
+    retries: 2.84.2
+    sdkHooks: 0.2.0
 generatedFiles:
-  - v1.go
-  - webhooks.go
+  - .gitattributes
+  - /models/components/attempt.go
+  - /models/components/attemptresponse.go
+  - /models/components/configchangesecret.go
+  - /models/components/configresponse.go
+  - /models/components/configsresponse.go
+  - /models/components/configuser.go
+  - /models/components/errorsenum.go
+  - /models/components/httpmetadata.go
+  - /models/components/security.go
+  - /models/components/webhooksconfig.go
+  - /models/operations/activateconfig.go
+  - /models/operations/changeconfigsecret.go
+  - /models/operations/deactivateconfig.go
+  - /models/operations/deleteconfig.go
+  - /models/operations/getmanyconfigs.go
+  - /models/operations/insertconfig.go
+  - /models/operations/testconfig.go
+  - /models/operations/updateconfig.go
+  - /models/sdkerrors/errorresponse.go
+  - USAGE.md
+  - docs/models/components/attempt.md
+  - docs/models/components/attemptresponse.md
+  - docs/models/components/configchangesecret.md
+  - docs/models/components/configresponse.md
+  - docs/models/components/configsresponse.md
+  - docs/models/components/configuser.md
+  - docs/models/components/cursor.md
+  - docs/models/components/errorsenum.md
+  - docs/models/components/httpmetadata.md
+  - docs/models/components/security.md
+  - docs/models/components/webhooksconfig.md
+  - docs/models/operations/activateconfigrequest.md
+  - docs/models/operations/activateconfigresponse.md
+  - docs/models/operations/changeconfigsecretrequest.md
+  - docs/models/operations/changeconfigsecretresponse.md
+  - docs/models/operations/deactivateconfigrequest.md
+  - docs/models/operations/deactivateconfigresponse.md
+  - docs/models/operations/deleteconfigrequest.md
+  - docs/models/operations/deleteconfigresponse.md
+  - docs/models/operations/getmanyconfigsrequest.md
+  - docs/models/operations/getmanyconfigsresponse.md
+  - docs/models/operations/insertconfigresponse.md
+  - docs/models/operations/option.md
+  - docs/models/operations/testconfigrequest.md
+  - docs/models/operations/testconfigresponse.md
+  - docs/models/operations/updateconfigrequest.md
+  - docs/models/operations/updateconfigresponse.md
+  - docs/models/sdkerrors/errorresponse.md
+  - docs/sdks/v1/README.md
   - formance.go
   - go.mod
-  - models/sdkerrors/sdkerror.go
-  - retry/config.go
-  - types/bigint.go
-  - types/date.go
-  - types/datetime.go
-  - types/decimal.go
-  - types/pointers.go
+  - internal/config/sdkconfiguration.go
+  - internal/hooks/clientcredentials.go
+  - internal/hooks/hooks.go
   - internal/utils/contenttype.go
+  - internal/utils/env.go
   - internal/utils/form.go
   - internal/utils/headers.go
   - internal/utils/json.go
+  - internal/utils/oauth2_credentials.go
+  - internal/utils/oauth2_sessions.go
   - internal/utils/pathparams.go
   - internal/utils/queryparams.go
   - internal/utils/requestbody.go
   - internal/utils/retries.go
   - internal/utils/security.go
   - internal/utils/utils.go
-  - /models/operations/getmanyconfigs.go
-  - /models/operations/insertconfig.go
-  - /models/operations/deleteconfig.go
-  - /models/operations/updateconfig.go
-  - /models/operations/testconfig.go
-  - /models/operations/activateconfig.go
-  - /models/operations/deactivateconfig.go
-  - /models/operations/changeconfigsecret.go
-  - /models/components/configsresponse.go
-  - /models/components/webhooksconfig.go
-  - /models/components/httpmetadata.go
-  - /models/components/errorsenum.go
-  - /models/components/configresponse.go
-  - /models/components/configuser.go
-  - /models/components/attemptresponse.go
-  - /models/components/attempt.go
-  - /models/components/configchangesecret.go
-  - /models/components/security.go
-  - /models/sdkerrors/errorresponse.go
-  - docs/models/operations/getmanyconfigsrequest.md
-  - docs/models/operations/getmanyconfigsresponse.md
-  - docs/models/operations/insertconfigresponse.md
-  - docs/models/operations/deleteconfigrequest.md
-  - docs/models/operations/deleteconfigresponse.md
-  - docs/models/operations/updateconfigrequest.md
-  - docs/models/operations/updateconfigresponse.md
-  - docs/models/operations/testconfigrequest.md
-  - docs/models/operations/testconfigresponse.md
-  - docs/models/operations/activateconfigrequest.md
-  - docs/models/operations/activateconfigresponse.md
-  - docs/models/operations/deactivateconfigrequest.md
-  - docs/models/operations/deactivateconfigresponse.md
-  - docs/models/operations/changeconfigsecretrequest.md
-  - docs/models/operations/changeconfigsecretresponse.md
-  - docs/models/components/cursor.md
-  - docs/models/components/configsresponse.md
-  - docs/models/components/webhooksconfig.md
-  - docs/models/components/httpmetadata.md
-  - docs/models/components/errorsenum.md
-  - docs/models/components/configresponse.md
-  - docs/models/components/configuser.md
-  - docs/models/components/attemptresponse.md
-  - docs/models/components/attempt.md
-  - docs/models/components/configchangesecret.md
-  - docs/models/components/security.md
-  - docs/models/sdkerrors/errorresponse.md
-  - docs/sdks/formance/README.md
-  - docs/sdks/webhooks/README.md
-  - docs/models/operations/option.md
-  - docs/sdks/v1/README.md
-  - USAGE.md
   - models/operations/options.go
-  - .gitattributes
-  - internal/hooks/hooks.go
-  - internal/hooks/clientcredentials.go
-  - CONTRIBUTING.md
+  - models/sdkerrors/sdkerror.go
+  - optionalnullable/optionalnullable.go
+  - optionalnullable/optionalnullable_test.go
+  - retry/config.go
+  - types/bigint.go
+  - types/date.go
+  - types/datetime.go
+  - types/pointers.go
+  - v1.go
+  - webhooks.go
+examples:
+  getManyConfigs:
+    speakeasy-default-get-many-configs:
+      parameters:
+        query:
+          id: "4997257d-dfb6-445b-929c-cbe2ab182818"
+          endpoint: "https://example.com"
+      responses:
+        "200":
+          application/json: {"cursor": {"hasMore": false, "data": [{"id": "53c52a10-a1c7-4332-ad97-167be5947993", "endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"], "active": true, "createdAt": "2024-07-14T09:46:11.631Z", "updatedAt": "2025-03-19T09:18:42.471Z"}]}}
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+  insertConfig:
+    speakeasy-default-insert-config:
+      requestBody:
+        application/json: {"endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"]}
+      responses:
+        "200":
+          application/json: {"data": {"id": "b58804a1-bafe-4ae9-8406-caf1120884d6", "endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"], "active": true, "createdAt": "2024-10-14T15:23:24.780Z", "updatedAt": "2026-05-03T05:43:59.683Z"}}
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+  deleteConfig:
+    speakeasy-default-delete-config:
+      parameters:
+        path:
+          id: "4997257d-dfb6-445b-929c-cbe2ab182818"
+      responses:
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+  updateConfig:
+    speakeasy-default-update-config:
+      parameters:
+        path:
+          id: "4997257d-dfb6-445b-929c-cbe2ab182818"
+      requestBody:
+        application/json: {"endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"]}
+      responses:
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+  testConfig:
+    speakeasy-default-test-config:
+      parameters:
+        path:
+          id: "4997257d-dfb6-445b-929c-cbe2ab182818"
+      responses:
+        "200":
+          application/json: {"data": {"id": "2e0f3e4f-47ca-4a85-bf97-18e6013ce74c", "webhookID": "1f9dfebb-b08a-4051-9207-1097f7123328", "createdAt": "2024-10-18T13:00:39.400Z", "updatedAt": "2025-07-04T10:23:30.395Z", "config": {"id": "34cc9ba7-5ead-4387-be16-68eba1c5b180", "endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"], "active": true, "createdAt": "2025-12-05T03:24:53.429Z", "updatedAt": "2026-06-20T08:19:05.434Z"}, "payload": "{\"data\":\"test\"}", "statusCode": 200, "retryAttempt": 1, "status": "success"}}
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+  activateConfig:
+    speakeasy-default-activate-config:
+      parameters:
+        path:
+          id: "4997257d-dfb6-445b-929c-cbe2ab182818"
+      responses:
+        "200":
+          application/json: {"data": {"id": "2c779556-b11c-4435-b844-1bffde26f8bd", "endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"], "active": true, "createdAt": "2026-07-06T11:23:44.119Z", "updatedAt": "2024-11-02T14:50:37.052Z"}}
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+  deactivateConfig:
+    speakeasy-default-deactivate-config:
+      parameters:
+        path:
+          id: "4997257d-dfb6-445b-929c-cbe2ab182818"
+      responses:
+        "200":
+          application/json: {"data": {"id": "090efb22-6e1a-475b-a9b3-a6ea75393546", "endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"], "active": true, "createdAt": "2024-11-04T03:49:30.126Z", "updatedAt": "2026-11-10T05:52:06.336Z"}}
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+  changeConfigSecret:
+    speakeasy-default-change-config-secret:
+      parameters:
+        path:
+          id: "4997257d-dfb6-445b-929c-cbe2ab182818"
+      requestBody:
+        application/json: {"secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3"}
+      responses:
+        "200":
+          application/json: {"data": {"id": "93d1ccab-8f50-4b4b-8675-b377e04332d7", "endpoint": "https://example.com", "secret": "V0bivxRWveaoz08afqjU6Ko/jwO0Cb+3", "eventTypes": ["TYPE1", "TYPE2"], "active": true, "createdAt": "2025-02-07T09:52:13.212Z", "updatedAt": "2025-05-15T05:29:40.289Z"}}
+        default:
+          application/json: {"errorCode": "VALIDATION", "errorMessage": "[VALIDATION] invalid 'cursor' query param", "details": "https://play.numscript.org/?payload=eyJlcnJvciI6ImFjY291bnQgaGFkIGluc3VmZmljaWVudCBmdW5kcyJ9"}
+examplesVersion: 1.0.2
+generatedTests: {}

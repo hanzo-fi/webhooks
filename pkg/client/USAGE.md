@@ -11,18 +11,20 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	s := client.New(
 		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     "<YOUR_CLIENT_ID_HERE>",
+			ClientSecret: "<YOUR_CLIENT_SECRET_HERE>",
+			TokenURL:     "/oauth/token",
 		}),
 	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request)
+
+	res, err := s.Webhooks.V1.GetManyConfigs(ctx, operations.GetManyConfigsRequest{
+		ID:       client.Pointer("4997257d-dfb6-445b-929c-cbe2ab182818"),
+		Endpoint: client.Pointer("https://example.com"),
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

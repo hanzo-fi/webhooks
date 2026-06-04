@@ -12,18 +12,18 @@ type ChangeConfigSecretRequest struct {
 	ConfigChangeSecret *components.ConfigChangeSecret `request:"mediaType=application/json"`
 }
 
-func (o *ChangeConfigSecretRequest) GetID() string {
-	if o == nil {
+func (c *ChangeConfigSecretRequest) GetID() string {
+	if c == nil {
 		return ""
 	}
-	return o.ID
+	return c.ID
 }
 
-func (o *ChangeConfigSecretRequest) GetConfigChangeSecret() *components.ConfigChangeSecret {
-	if o == nil {
+func (c *ChangeConfigSecretRequest) GetConfigChangeSecret() *components.ConfigChangeSecret {
+	if c == nil {
 		return nil
 	}
-	return o.ConfigChangeSecret
+	return c.ConfigChangeSecret
 }
 
 type ChangeConfigSecretResponse struct {
@@ -32,16 +32,16 @@ type ChangeConfigSecretResponse struct {
 	ConfigResponse *components.ConfigResponse
 }
 
-func (o *ChangeConfigSecretResponse) GetHTTPMeta() components.HTTPMetadata {
-	if o == nil {
+func (c *ChangeConfigSecretResponse) GetHTTPMeta() components.HTTPMetadata {
+	if c == nil {
 		return components.HTTPMetadata{}
 	}
-	return o.HTTPMeta
+	return c.HTTPMeta
 }
 
-func (o *ChangeConfigSecretResponse) GetConfigResponse() *components.ConfigResponse {
-	if o == nil {
+func (c *ChangeConfigSecretResponse) GetConfigResponse() *components.ConfigResponse {
+	if c == nil {
 		return nil
 	}
-	return o.ConfigResponse
+	return c.ConfigResponse
 }

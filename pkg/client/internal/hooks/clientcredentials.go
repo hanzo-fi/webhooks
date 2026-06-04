@@ -10,10 +10,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/formancehq/webhooks/pkg/client/models/components"
+	"golang.org/x/sync/singleflight"
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
+	"sort"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -31,15 +35,19 @@ type tokenResponse struct {
 }
 
 type credentials struct {
-	ClientID     string
-	ClientSecret string
-	TokenURL     string
+	ClientID             string
+	ClientSecret         string
+	TokenURL             string
+	Scopes               []string
+	AdditionalProperties map[string]string
 }
 
 type clientCredentialsHook struct {
-	baseURL  string
 	client   HTTPClient
-	sessions map[string]*session
+	sessions sync.Map
+
+	// sessionsGroup prevents concurrent token refreshes.
+	sessionsGroup *singleflight.Group
 }
 
 var (
@@ -50,23 +58,25 @@ var (
 
 func NewClientCredentialsHook() *clientCredentialsHook {
 	return &clientCredentialsHook{
-		sessions: make(map[string]*session),
+		sessionsGroup: new(singleflight.Group),
 	}
 }
 
 func (c *clientCredentialsHook) SDKInit(baseURL string, client HTTPClient) (string, HTTPClient) {
-	c.baseURL = baseURL
 	c.client = client
 	return baseURL, client
 }
 
+func (c *clientCredentialsHook) isHookDisabled(ctx HookContext) bool {
+	return ctx.OAuth2Scopes == nil
+}
+
 func (c *clientCredentialsHook) BeforeRequest(ctx BeforeRequestContext, req *http.Request) (*http.Request, error) {
-	if ctx.OAuth2Scopes == nil {
-		// OAuth2 not in use
+	if c.isHookDisabled(ctx.HookContext) {
 		return req, nil
 	}
 
-	credentials, err := c.getCredentials(ctx.Context, ctx.SecuritySource)
+	credentials, err := c.getCredentials(ctx.HookContext, ctx.SecuritySource)
 	if err != nil {
 		return nil, &FailEarly{Cause: err}
 	}
@@ -74,26 +84,19 @@ func (c *clientCredentialsHook) BeforeRequest(ctx BeforeRequestContext, req *htt
 		return req, err
 	}
 
-	sessionKey := getSessionKey(credentials.ClientID, credentials.ClientSecret)
-	sess, ok := c.sessions[sessionKey]
-	if !ok || !hasRequiredScopes(sess.Scopes, ctx.OAuth2Scopes) || hasTokenExpired(sess.ExpiresAt) {
-		s, err := c.doTokenRequest(ctx.Context, credentials, getScopes(ctx.OAuth2Scopes, sess))
-		if err != nil {
-			return nil, fmt.Errorf("failed to get token: %w", err)
-		}
+	session, err := c.getSession(ctx, credentials)
 
-		c.sessions[sessionKey] = s
-		sess = s
+	if err != nil {
+		return nil, err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", sess.Token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", session.Token))
 
 	return req, nil
 }
 
 func (c *clientCredentialsHook) AfterError(ctx AfterErrorContext, res *http.Response, err error) (*http.Response, error) {
-	if ctx.OAuth2Scopes == nil {
-		// OAuth2 not in use
+	if c.isHookDisabled(ctx.HookContext) {
 		return res, err
 	}
 
@@ -102,7 +105,7 @@ func (c *clientCredentialsHook) AfterError(ctx AfterErrorContext, res *http.Resp
 		return res, err
 	}
 
-	credentials, err := c.getCredentials(ctx.Context, ctx.SecuritySource)
+	credentials, err := c.getCredentials(ctx.HookContext, ctx.SecuritySource)
 	if err != nil {
 		return nil, &FailEarly{Cause: err}
 	}
@@ -111,14 +114,19 @@ func (c *clientCredentialsHook) AfterError(ctx AfterErrorContext, res *http.Resp
 	}
 
 	if res != nil && res.StatusCode == http.StatusUnauthorized {
-		sessionKey := getSessionKey(credentials.ClientID, credentials.ClientSecret)
-		delete(c.sessions, sessionKey)
+		clientKey := getSessionKey(credentials.ClientID, credentials.ClientSecret)
+		requiredScopes := c.getRequiredScopes(credentials, ctx.HookContext)
+		scopeKey := getScopeKey(requiredScopes)
+		sessionKey := fmt.Sprintf("%s:%s", clientKey, scopeKey)
+
+		c.sessionsGroup.Forget(sessionKey)
+		c.removeSession(clientKey, scopeKey)
 	}
 
 	return res, err
 }
 
-func (c *clientCredentialsHook) doTokenRequest(ctx context.Context, credentials *credentials, scopes []string) (*session, error) {
+func (c *clientCredentialsHook) doTokenRequest(ctx HookContext, credentials *credentials, scopes []string) (*session, error) {
 	values := url.Values{}
 	values.Set("grant_type", "client_credentials")
 	values.Set("client_id", credentials.ClientID)
@@ -128,19 +136,25 @@ func (c *clientCredentialsHook) doTokenRequest(ctx context.Context, credentials 
 		values.Set("scope", strings.Join(scopes, " "))
 	}
 
+	for key, value := range credentials.AdditionalProperties {
+		values.Set(key, value)
+	}
+
 	tokenURL := credentials.TokenURL
 	u, err := url.Parse(tokenURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse token URL: %w", err)
 	}
 	if !u.IsAbs() {
-		tokenURL, err = url.JoinPath(c.baseURL, tokenURL)
+		base, err := url.Parse(ctx.BaseURL)
 		if err != nil {
-			return nil, fmt.Errorf("failed to parse token URL: %w", err)
+			return nil, fmt.Errorf("failed to parse base URL: %w", err)
 		}
+		u = base.ResolveReference(u)
+		tokenURL = u.String()
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, tokenURL, bytes.NewBufferString(values.Encode()))
+	req, err := http.NewRequestWithContext(ctx.Context, http.MethodPost, tokenURL, bytes.NewBufferString(values.Encode()))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create token request: %w", err)
 	}
@@ -163,14 +177,14 @@ func (c *clientCredentialsHook) doTokenRequest(ctx context.Context, credentials 
 		return nil, fmt.Errorf("failed to decode token response: %w", err)
 	}
 
-	if tokenRes.TokenType != "Bearer" {
+	if strings.ToLower(tokenRes.TokenType) != "bearer" {
 		return nil, fmt.Errorf("unexpected token type: %s", tokenRes.TokenType)
 	}
 
 	var expiresAt *int64
 	if tokenRes.ExpiresIn != nil {
 		expiresAt = new(int64)
-		*expiresAt = time.Now().Unix() + *tokenRes.ExpiresIn
+		*expiresAt = time.Now().UTC().Unix() + *tokenRes.ExpiresIn
 	}
 
 	return &session{
@@ -181,33 +195,174 @@ func (c *clientCredentialsHook) doTokenRequest(ctx context.Context, credentials 
 	}, nil
 }
 
-func (c *clientCredentialsHook) getCredentials(ctx context.Context, source func(ctx context.Context) (interface{}, error)) (*credentials, error) {
+func (c *clientCredentialsHook) getCredentials(ctx HookContext, source func(ctx context.Context) (any, error)) (*credentials, error) {
 	if source == nil {
 		return nil, nil
 	}
 
-	sec, err := source(ctx)
+	sec, err := source(ctx.Context)
 	if err != nil {
 		return nil, err
 	}
 
+	return c.getCredentialsGlobal(sec)
+}
+
+func (c *clientCredentialsHook) getCredentialsGlobal(sec any) (*credentials, error) {
 	security, ok := sec.(components.Security)
 
 	if !ok {
 		return nil, fmt.Errorf("unexpected security type: %T", sec)
 	}
+	secType := reflect.TypeOf(security)
+	if secType.Kind() == reflect.Ptr {
+		secType = secType.Elem()
+	}
+	secValue := reflect.ValueOf(security)
+	if secValue.Kind() == reflect.Ptr {
+		secValue = secValue.Elem()
+	}
+	if security.TokenURL == "" {
+
+		tokenURLField, ok := secType.FieldByName("TokenURL")
+		if !ok {
+			return nil, fmt.Errorf("TokenURL is required for security type %s", secType.Name())
+		}
+		tokenURLDefault := tokenURLField.Tag.Get("default")
+		security.TokenURL = tokenURLDefault
+	}
+
+	additionalProperties := make(map[string]string)
+	for i := 0; i < secType.NumField(); i++ {
+		field := secType.Field(i)
+		if field.Name != "TokenURL" && field.Name != "ClientID" && field.Name != "ClientSecret" && field.Name != "Scopes" {
+			// Get the field value using reflection
+			fieldValue := secValue.Field(i)
+			if fieldValue.IsValid() {
+				tag := field.Tag.Get("security")
+				parts := strings.Split(tag, ",")
+				for _, part := range parts {
+					if strings.HasPrefix(part, "name=") {
+						additionalProperties[strings.TrimPrefix(part, "name=")] = fieldValue.String()
+						break
+					}
+				}
+			}
+		}
+	}
 
 	return &credentials{
-		ClientID:     security.ClientID,
-		ClientSecret: security.ClientSecret,
-		TokenURL:     security.GetTokenURL(),
+		ClientID:             security.ClientID,
+		ClientSecret:         security.ClientSecret,
+		TokenURL:             security.TokenURL,
+		Scopes:               nil,
+		AdditionalProperties: additionalProperties,
 	}, nil
+}
+
+func (c *clientCredentialsHook) getSession(ctx BeforeRequestContext, credentials *credentials) (*session, error) {
+	clientKey := getSessionKey(credentials.ClientID, credentials.ClientSecret)
+	requiredScopes := c.getRequiredScopes(credentials, ctx.HookContext)
+	scopeKey := getScopeKey(requiredScopes)
+
+	// First look for exact match
+	if rawClientSessions, ok := c.sessions.Load(clientKey); ok {
+		clientSessions := rawClientSessions.(*sync.Map)
+		if rawSession, ok := clientSessions.Load(scopeKey); ok {
+			session := rawSession.(*session)
+			if hasTokenExpired(session.ExpiresAt) {
+				c.removeSession(clientKey, scopeKey)
+			} else {
+				return session, nil
+			}
+		}
+
+		// If no exact match, look for superset match
+		var existingSession *session
+		clientSessions.Range(func(key, value interface{}) bool {
+			sess := value.(*session)
+			if hasTokenExpired(sess.ExpiresAt) {
+				c.removeSession(clientKey, key.(string))
+			} else if hasRequiredScopes(sess.Scopes, requiredScopes) {
+				existingSession = sess
+				return false // Stop iteration
+			}
+			return true
+		})
+
+		if existingSession != nil {
+			return existingSession, nil
+		}
+	}
+
+	// Create a new session
+	sessionKey := fmt.Sprintf("%s:%s", clientKey, scopeKey)
+	rawSession, err, _ := c.sessionsGroup.Do(sessionKey, func() (any, error) {
+		refreshedSession, err := c.doTokenRequest(ctx.HookContext, credentials, requiredScopes)
+
+		if err != nil {
+			return nil, fmt.Errorf("failed to get token: %w", err)
+		}
+
+		rawClientSessions, _ := c.sessions.LoadOrStore(clientKey, &sync.Map{})
+		clientSessions := rawClientSessions.(*sync.Map)
+		clientSessions.Store(scopeKey, refreshedSession)
+
+		return refreshedSession, err
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	session := rawSession.(*session)
+
+	return session, nil
+}
+
+func (c *clientCredentialsHook) getRequiredScopes(credentials *credentials, ctx HookContext) []string {
+	if credentials.Scopes != nil {
+		return credentials.Scopes
+	}
+	if ctx.OAuth2Scopes != nil {
+		return ctx.OAuth2Scopes
+	}
+	return []string{}
 }
 
 func getSessionKey(clientID, clientSecret string) string {
 	key := fmt.Sprintf("%s:%s", clientID, clientSecret)
 	hash := md5.Sum([]byte(key))
 	return hex.EncodeToString(hash[:])
+}
+
+func getScopeKey(scopes []string) string {
+	if len(scopes) == 0 {
+		return ""
+	}
+
+	sortedScopes := make([]string, len(scopes))
+	copy(sortedScopes, scopes)
+	sort.Strings(sortedScopes)
+
+	return strings.Join(sortedScopes, "&")
+}
+
+func (c *clientCredentialsHook) removeSession(clientKey, scopeKey string) {
+	if rawClientSessions, ok := c.sessions.Load(clientKey); ok {
+		clientSessions := rawClientSessions.(*sync.Map)
+		clientSessions.Delete(scopeKey)
+
+		// Check if client sessions is empty and clean up
+		isEmpty := true
+		clientSessions.Range(func(key, value interface{}) bool {
+			isEmpty = false
+			return false // Stop iteration
+		})
+		if isEmpty {
+			c.sessions.Delete(clientKey)
+		}
+	}
 }
 
 func hasRequiredScopes(scopes []string, requiredScopes []string) bool {
@@ -226,26 +381,9 @@ func hasRequiredScopes(scopes []string, requiredScopes []string) bool {
 	return true
 }
 
-func getScopes(requiredScopes []string, sess *session) []string {
-	scopes := requiredScopes
-	if sess != nil {
-		for _, scope := range sess.Scopes {
-			found := false
-			for _, requiredScope := range requiredScopes {
-				if scope == requiredScope {
-					found = true
-					break
-				}
-			}
-			if !found {
-				scopes = append(scopes, scope)
-			}
-		}
-	}
-
-	return scopes
-}
-
+// hasTokenExpired checks if the token has expired.
+// If no expires_in field was returned by the authorization server, the token is considered to never expire.
+// A 60-second buffer is applied to refresh tokens before they actually expire.
 func hasTokenExpired(expiresAt *int64) bool {
-	return expiresAt == nil || time.Now().Unix()+60 >= *expiresAt
+	return expiresAt != nil && time.Now().UTC().Unix()+60 >= *expiresAt
 }

@@ -12,27 +12,27 @@ type UpdateConfigRequest struct {
 	ConfigUser components.ConfigUser `request:"mediaType=application/json"`
 }
 
-func (o *UpdateConfigRequest) GetID() string {
-	if o == nil {
+func (u *UpdateConfigRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpdateConfigRequest) GetConfigUser() components.ConfigUser {
-	if o == nil {
+func (u *UpdateConfigRequest) GetConfigUser() components.ConfigUser {
+	if u == nil {
 		return components.ConfigUser{}
 	}
-	return o.ConfigUser
+	return u.ConfigUser
 }
 
 type UpdateConfigResponse struct {
 	HTTPMeta components.HTTPMetadata `json:"-"`
 }
 
-func (o *UpdateConfigResponse) GetHTTPMeta() components.HTTPMetadata {
-	if o == nil {
+func (u *UpdateConfigResponse) GetHTTPMeta() components.HTTPMetadata {
+	if u == nil {
 		return components.HTTPMetadata{}
 	}
-	return o.HTTPMeta
+	return u.HTTPMeta
 }

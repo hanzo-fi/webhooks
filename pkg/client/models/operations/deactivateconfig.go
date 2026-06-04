@@ -11,11 +11,11 @@ type DeactivateConfigRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeactivateConfigRequest) GetID() string {
-	if o == nil {
+func (d *DeactivateConfigRequest) GetID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ID
+	return d.ID
 }
 
 type DeactivateConfigResponse struct {
@@ -24,16 +24,16 @@ type DeactivateConfigResponse struct {
 	ConfigResponse *components.ConfigResponse
 }
 
-func (o *DeactivateConfigResponse) GetHTTPMeta() components.HTTPMetadata {
-	if o == nil {
+func (d *DeactivateConfigResponse) GetHTTPMeta() components.HTTPMetadata {
+	if d == nil {
 		return components.HTTPMetadata{}
 	}
-	return o.HTTPMeta
+	return d.HTTPMeta
 }
 
-func (o *DeactivateConfigResponse) GetConfigResponse() *components.ConfigResponse {
-	if o == nil {
+func (d *DeactivateConfigResponse) GetConfigResponse() *components.ConfigResponse {
+	if d == nil {
 		return nil
 	}
-	return o.ConfigResponse
+	return d.ConfigResponse
 }

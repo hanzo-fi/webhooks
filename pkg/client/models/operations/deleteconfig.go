@@ -11,20 +11,20 @@ type DeleteConfigRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *DeleteConfigRequest) GetID() string {
-	if o == nil {
+func (d *DeleteConfigRequest) GetID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ID
+	return d.ID
 }
 
 type DeleteConfigResponse struct {
 	HTTPMeta components.HTTPMetadata `json:"-"`
 }
 
-func (o *DeleteConfigResponse) GetHTTPMeta() components.HTTPMetadata {
-	if o == nil {
+func (d *DeleteConfigResponse) GetHTTPMeta() components.HTTPMetadata {
+	if d == nil {
 		return components.HTTPMetadata{}
 	}
-	return o.HTTPMeta
+	return d.HTTPMeta
 }

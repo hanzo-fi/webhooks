@@ -12,16 +12,16 @@ type InsertConfigResponse struct {
 	ConfigResponse *components.ConfigResponse
 }
 
-func (o *InsertConfigResponse) GetHTTPMeta() components.HTTPMetadata {
-	if o == nil {
+func (i *InsertConfigResponse) GetHTTPMeta() components.HTTPMetadata {
+	if i == nil {
 		return components.HTTPMetadata{}
 	}
-	return o.HTTPMeta
+	return i.HTTPMeta
 }
 
-func (o *InsertConfigResponse) GetConfigResponse() *components.ConfigResponse {
-	if o == nil {
+func (i *InsertConfigResponse) GetConfigResponse() *components.ConfigResponse {
+	if i == nil {
 		return nil
 	}
-	return o.ConfigResponse
+	return i.ConfigResponse
 }

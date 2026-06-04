@@ -16,9 +16,35 @@ It has been generated successfully based on your OpenAPI spec. However, it is no
 - [ ] 🎁 Publish your SDK to package managers by [configuring automatic publishing](https://www.speakeasy.com/docs/advanced-setup/publish-sdks)
 - [ ] ✨ When ready to productionize, delete this section from the README
 
+<!-- Start Summary [summary] -->
+## Summary
+
+
+<!-- End Summary [summary] -->
+
+<!-- Start Table of Contents [toc] -->
+## Table of Contents
+<!-- $toc-max-depth=2 -->
+* [openapi](#openapi)
+  * [🏗 **Welcome to your new SDK!** 🏗](#welcome-to-your-new-sdk)
+  * [SDK Installation](#sdk-installation)
+  * [SDK Example Usage](#sdk-example-usage)
+  * [Available Resources and Operations](#available-resources-and-operations)
+  * [Retries](#retries)
+  * [Error Handling](#error-handling)
+  * [Server Selection](#server-selection)
+  * [Custom HTTP Client](#custom-http-client)
+  * [Authentication](#authentication)
+* [Development](#development)
+  * [Maturity](#maturity)
+  * [Contributions](#contributions)
+
+<!-- End Table of Contents [toc] -->
+
 <!-- Start SDK Installation [installation] -->
 ## SDK Installation
 
+To add the SDK as a dependency to your project:
 ```bash
 go get github.com/formancehq/webhooks/pkg/client
 ```
@@ -41,18 +67,20 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	s := client.New(
 		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     "<YOUR_CLIENT_ID_HERE>",
+			ClientSecret: "<YOUR_CLIENT_SECRET_HERE>",
+			TokenURL:     "/oauth/token",
 		}),
 	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request)
+
+	res, err := s.Webhooks.V1.GetManyConfigs(ctx, operations.GetManyConfigsRequest{
+		ID:       client.Pointer("4997257d-dfb6-445b-929c-cbe2ab182818"),
+		Endpoint: client.Pointer("https://example.com"),
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -67,7 +95,10 @@ func main() {
 <!-- Start Available Resources and Operations [operations] -->
 ## Available Resources and Operations
 
-### [Webhooks.V1](docs/sdks/v1/README.md)
+<details open>
+<summary>Available methods</summary>
+
+#### [Webhooks.V1](docs/sdks/v1/README.md)
 
 * [GetManyConfigs](docs/sdks/v1/README.md#getmanyconfigs) - Get many configs
 * [InsertConfig](docs/sdks/v1/README.md#insertconfig) - Insert a new config
@@ -77,6 +108,8 @@ func main() {
 * [ActivateConfig](docs/sdks/v1/README.md#activateconfig) - Activate one config
 * [DeactivateConfig](docs/sdks/v1/README.md#deactivateconfig) - Deactivate one config
 * [ChangeConfigSecret](docs/sdks/v1/README.md#changeconfigsecret) - Change the signing secret of a config
+
+</details>
 <!-- End Available Resources and Operations [operations] -->
 
 <!-- Start Retries [retries] -->
@@ -99,18 +132,20 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	s := client.New(
 		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     "<YOUR_CLIENT_ID_HERE>",
+			ClientSecret: "<YOUR_CLIENT_SECRET_HERE>",
+			TokenURL:     "/oauth/token",
 		}),
 	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request, operations.WithRetries(
+
+	res, err := s.Webhooks.V1.GetManyConfigs(ctx, operations.GetManyConfigsRequest{
+		ID:       client.Pointer("4997257d-dfb6-445b-929c-cbe2ab182818"),
+		Endpoint: client.Pointer("https://example.com"),
+	}, operations.WithRetries(
 		retry.Config{
 			Strategy: "backoff",
 			Backoff: &retry.BackoffStrategy{
@@ -145,6 +180,8 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	s := client.New(
 		client.WithRetryConfig(
 			retry.Config{
@@ -158,16 +195,16 @@ func main() {
 				RetryConnectionErrors: false,
 			}),
 		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     "<YOUR_CLIENT_ID_HERE>",
+			ClientSecret: "<YOUR_CLIENT_SECRET_HERE>",
+			TokenURL:     "/oauth/token",
 		}),
 	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request)
+
+	res, err := s.Webhooks.V1.GetManyConfigs(ctx, operations.GetManyConfigsRequest{
+		ID:       client.Pointer("4997257d-dfb6-445b-929c-cbe2ab182818"),
+		Endpoint: client.Pointer("https://example.com"),
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -182,12 +219,16 @@ func main() {
 <!-- Start Error Handling [errors] -->
 ## Error Handling
 
-Handling errors in this SDK should largely match your expectations.  All operations return a response object or an error, they will never return both.  When specified by the OpenAPI spec document, the SDK will return the appropriate subclass.
+Handling errors in this SDK should largely match your expectations. All operations return a response object or an error, they will never return both.
 
-| Error Object            | Status Code             | Content Type            |
-| ----------------------- | ----------------------- | ----------------------- |
-| sdkerrors.ErrorResponse | default                 | application/json        |
-| sdkerrors.SDKError      | 4xx-5xx                 | */*                     |
+By Default, an API error will return `sdkerrors.SDKError`. When custom error responses are specified for an operation, the SDK may also return their associated error. You can refer to respective *Errors* tables in SDK docs for more details on possible error types for each operation.
+
+For example, the `GetManyConfigs` function may return the following errors:
+
+| Error Type              | Status Code | Content Type     |
+| ----------------------- | ----------- | ---------------- |
+| sdkerrors.ErrorResponse | default     | application/json |
+| sdkerrors.SDKError      | 4XX, 5XX    | \*/\*            |
 
 ### Example
 
@@ -205,18 +246,20 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	s := client.New(
 		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     "<YOUR_CLIENT_ID_HERE>",
+			ClientSecret: "<YOUR_CLIENT_SECRET_HERE>",
+			TokenURL:     "/oauth/token",
 		}),
 	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request)
+
+	res, err := s.Webhooks.V1.GetManyConfigs(ctx, operations.GetManyConfigsRequest{
+		ID:       client.Pointer("4997257d-dfb6-445b-929c-cbe2ab182818"),
+		Endpoint: client.Pointer("https://example.com"),
+	})
 	if err != nil {
 
 		var e *sdkerrors.ErrorResponse
@@ -239,55 +282,9 @@ func main() {
 <!-- Start Server Selection [server] -->
 ## Server Selection
 
-### Select Server by Index
-
-You can override the default server globally using the `WithServerIndex` option when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the indexes associated with the available servers:
-
-| # | Server | Variables |
-| - | ------ | --------- |
-| 0 | `http://localhost:8080/` | None |
-
-#### Example
-
-```go
-package main
-
-import (
-	"context"
-	"github.com/formancehq/webhooks/pkg/client"
-	"github.com/formancehq/webhooks/pkg/client/models/components"
-	"github.com/formancehq/webhooks/pkg/client/models/operations"
-	"log"
-)
-
-func main() {
-	s := client.New(
-		client.WithServerIndex(0),
-		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
-		}),
-	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if res.ConfigsResponse != nil {
-		// handle response
-	}
-}
-
-```
-
-
 ### Override Server URL Per-Client
 
-The default server can also be overridden globally using the `WithServerURL` option when initializing the SDK client instance. For example:
+The default server can be overridden globally using the `WithServerURL(serverURL string)` option when initializing the SDK client instance. For example:
 ```go
 package main
 
@@ -300,19 +297,21 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	s := client.New(
 		client.WithServerURL("http://localhost:8080/"),
 		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     "<YOUR_CLIENT_ID_HERE>",
+			ClientSecret: "<YOUR_CLIENT_SECRET_HERE>",
+			TokenURL:     "/oauth/token",
 		}),
 	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request)
+
+	res, err := s.Webhooks.V1.GetManyConfigs(ctx, operations.GetManyConfigsRequest{
+		ID:       client.Pointer("4997257d-dfb6-445b-929c-cbe2ab182818"),
+		Endpoint: client.Pointer("https://example.com"),
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -341,12 +340,13 @@ The built-in `net/http` client satisfies this interface and a default client bas
 import (
 	"net/http"
 	"time"
-	"github.com/myorg/your-go-sdk"
+
+	"github.com/formancehq/webhooks/pkg/client"
 )
 
 var (
 	httpClient = &http.Client{Timeout: 30 * time.Second}
-	sdkClient  = sdk.New(sdk.WithClient(httpClient))
+	sdkClient  = client.New(client.WithClient(httpClient))
 )
 ```
 
@@ -358,14 +358,13 @@ This can be a convenient way to configure timeouts, cookies, proxies, custom hea
 
 ### Per-Client Security Schemes
 
-This SDK supports the following security schemes globally:
+This SDK supports the following security scheme globally:
 
-| Name           | Type           | Scheme         |
-| -------------- | -------------- | -------------- |
-| `ClientID`     | oauth2         | OAuth2 token   |
-| `ClientSecret` | oauth2         | OAuth2 token   |
+| Name                                         | Type   | Scheme                         |
+| -------------------------------------------- | ------ | ------------------------------ |
+| `ClientID`<br/>`ClientSecret`<br/>`TokenURL` | oauth2 | OAuth2 Client Credentials Flow |
 
-You can set the security parameters through the `WithSecurity` option when initializing the SDK client instance. The selected scheme will be used by default to authenticate with the API for all operations that support it. For example:
+You can configure it using the `WithSecurity` option when initializing the SDK client instance. For example:
 ```go
 package main
 
@@ -378,18 +377,20 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	s := client.New(
 		client.WithSecurity(components.Security{
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     "<YOUR_CLIENT_ID_HERE>",
+			ClientSecret: "<YOUR_CLIENT_SECRET_HERE>",
+			TokenURL:     "/oauth/token",
 		}),
 	)
-	request := operations.GetManyConfigsRequest{
-		ID:       client.String("4997257d-dfb6-445b-929c-cbe2ab182818"),
-		Endpoint: client.String("https://example.com"),
-	}
-	ctx := context.Background()
-	res, err := s.Webhooks.V1.GetManyConfigs(ctx, request)
+
+	res, err := s.Webhooks.V1.GetManyConfigs(ctx, operations.GetManyConfigsRequest{
+		ID:       client.Pointer("4997257d-dfb6-445b-929c-cbe2ab182818"),
+		Endpoint: client.Pointer("https://example.com"),
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -400,12 +401,6 @@ func main() {
 
 ```
 <!-- End Authentication [security] -->
-
-<!-- Start Special Types [types] -->
-## Special Types
-
-
-<!-- End Special Types [types] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 

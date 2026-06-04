@@ -2,9 +2,12 @@
 
 package client
 
+// Generated from OpenAPI doc version WEBHOOKS_VERSION and generator version 2.763.3
+
 import (
 	"context"
 	"fmt"
+	"github.com/formancehq/webhooks/pkg/client/internal/config"
 	"github.com/formancehq/webhooks/pkg/client/internal/hooks"
 	"github.com/formancehq/webhooks/pkg/client/internal/utils"
 	"github.com/formancehq/webhooks/pkg/client/models/components"
@@ -18,7 +21,7 @@ var ServerList = []string{
 	"http://localhost:8080/",
 }
 
-// HTTPClient provides an interface for suplying the SDK with a custom HTTP client
+// HTTPClient provides an interface for supplying the SDK with a custom HTTP client
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
@@ -41,33 +44,15 @@ func Float32(f float32) *float32 { return &f }
 // Float64 provides a helper function to return a pointer to a float64
 func Float64(f float64) *float64 { return &f }
 
-type sdkConfiguration struct {
-	Client            HTTPClient
-	Security          func(context.Context) (interface{}, error)
-	ServerURL         string
-	ServerIndex       int
-	Language          string
-	OpenAPIDocVersion string
-	SDKVersion        string
-	GenVersion        string
-	UserAgent         string
-	RetryConfig       *retry.Config
-	Hooks             *hooks.Hooks
-	Timeout           *time.Duration
-}
-
-func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
-	if c.ServerURL != "" {
-		return c.ServerURL, nil
-	}
-
-	return ServerList[c.ServerIndex], nil
-}
+// Pointer provides a helper function to return a pointer to a type
+func Pointer[T any](v T) *T { return &v }
 
 type Formance struct {
-	Webhooks *Webhooks
+	SDKVersion string
+	Webhooks   *Webhooks
 
-	sdkConfiguration sdkConfiguration
+	sdkConfiguration config.SDKConfiguration
+	hooks            *hooks.Hooks
 }
 
 type SDKOption func(*Formance)
@@ -140,14 +125,12 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *Formance {
 	sdk := &Formance{
-		sdkConfiguration: sdkConfiguration{
-			Language:          "go",
-			OpenAPIDocVersion: "WEBHOOKS_VERSION",
-			SDKVersion:        "0.2.1",
-			GenVersion:        "2.384.1",
-			UserAgent:         "speakeasy-sdk/go 0.2.1 2.384.1 WEBHOOKS_VERSION github.com/formancehq/webhooks/pkg/client",
-			Hooks:             hooks.New(),
+		SDKVersion: "0.3.0",
+		sdkConfiguration: config.SDKConfiguration{
+			UserAgent:  "speakeasy-sdk/go 0.3.0 2.763.3 WEBHOOKS_VERSION github.com/formancehq/webhooks/pkg/client",
+			ServerList: ServerList,
 		},
+		hooks: hooks.New(),
 	}
 	for _, opt := range opts {
 		opt(sdk)
@@ -160,12 +143,12 @@ func New(opts ...SDKOption) *Formance {
 
 	currentServerURL, _ := sdk.sdkConfiguration.GetServerDetails()
 	serverURL := currentServerURL
-	serverURL, sdk.sdkConfiguration.Client = sdk.sdkConfiguration.Hooks.SDKInit(currentServerURL, sdk.sdkConfiguration.Client)
-	if serverURL != currentServerURL {
+	serverURL, sdk.sdkConfiguration.Client = sdk.hooks.SDKInit(currentServerURL, sdk.sdkConfiguration.Client)
+	if currentServerURL != serverURL {
 		sdk.sdkConfiguration.ServerURL = serverURL
 	}
 
-	sdk.Webhooks = newWebhooks(sdk.sdkConfiguration)
+	sdk.Webhooks = newWebhooks(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

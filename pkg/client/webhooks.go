@@ -2,15 +2,24 @@
 
 package client
 
+import (
+	"github.com/formancehq/webhooks/pkg/client/internal/config"
+	"github.com/formancehq/webhooks/pkg/client/internal/hooks"
+)
+
 type Webhooks struct {
 	V1 *V1
 
-	sdkConfiguration sdkConfiguration
+	rootSDK          *Formance
+	sdkConfiguration config.SDKConfiguration
+	hooks            *hooks.Hooks
 }
 
-func newWebhooks(sdkConfig sdkConfiguration) *Webhooks {
+func newWebhooks(rootSDK *Formance, sdkConfig config.SDKConfiguration, hooks *hooks.Hooks) *Webhooks {
 	return &Webhooks{
+		rootSDK:          rootSDK,
 		sdkConfiguration: sdkConfig,
-		V1:               newV1(sdkConfig),
+		hooks:            hooks,
+		V1:               newV1(rootSDK, sdkConfig, hooks),
 	}
 }

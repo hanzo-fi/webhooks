@@ -11,11 +11,11 @@ type TestConfigRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *TestConfigRequest) GetID() string {
-	if o == nil {
+func (t *TestConfigRequest) GetID() string {
+	if t == nil {
 		return ""
 	}
-	return o.ID
+	return t.ID
 }
 
 type TestConfigResponse struct {
@@ -24,16 +24,16 @@ type TestConfigResponse struct {
 	AttemptResponse *components.AttemptResponse
 }
 
-func (o *TestConfigResponse) GetHTTPMeta() components.HTTPMetadata {
-	if o == nil {
+func (t *TestConfigResponse) GetHTTPMeta() components.HTTPMetadata {
+	if t == nil {
 		return components.HTTPMetadata{}
 	}
-	return o.HTTPMeta
+	return t.HTTPMeta
 }
 
-func (o *TestConfigResponse) GetAttemptResponse() *components.AttemptResponse {
-	if o == nil {
+func (t *TestConfigResponse) GetAttemptResponse() *components.AttemptResponse {
+	if t == nil {
 		return nil
 	}
-	return o.AttemptResponse
+	return t.AttemptResponse
 }

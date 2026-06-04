@@ -7,27 +7,27 @@ type Cursor struct {
 	Data    []WebhooksConfig `json:"data"`
 }
 
-func (o *Cursor) GetHasMore() bool {
-	if o == nil {
+func (c *Cursor) GetHasMore() bool {
+	if c == nil {
 		return false
 	}
-	return o.HasMore
+	return c.HasMore
 }
 
-func (o *Cursor) GetData() []WebhooksConfig {
-	if o == nil {
+func (c *Cursor) GetData() []WebhooksConfig {
+	if c == nil {
 		return []WebhooksConfig{}
 	}
-	return o.Data
+	return c.Data
 }
 
 type ConfigsResponse struct {
 	Cursor Cursor `json:"cursor"`
 }
 
-func (o *ConfigsResponse) GetCursor() Cursor {
-	if o == nil {
+func (c *ConfigsResponse) GetCursor() Cursor {
+	if c == nil {
 		return Cursor{}
 	}
-	return o.Cursor
+	return c.Cursor
 }

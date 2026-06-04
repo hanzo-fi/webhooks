@@ -9,7 +9,7 @@ import (
 type Security struct {
 	ClientID     string `security:"scheme,type=oauth2,subtype=client_credentials,name=clientID"`
 	ClientSecret string `security:"scheme,type=oauth2,subtype=client_credentials,name=clientSecret"`
-	tokenURL     string `const:"/oauth/token"`
+	TokenURL     string `default:"/oauth/token"`
 }
 
 func (s Security) MarshalJSON() ([]byte, error) {
@@ -17,26 +17,29 @@ func (s Security) MarshalJSON() ([]byte, error) {
 }
 
 func (s *Security) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &s, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"clientID", "clientSecret", "tokenURL"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *Security) GetClientID() string {
-	if o == nil {
+func (s *Security) GetClientID() string {
+	if s == nil {
 		return ""
 	}
-	return o.ClientID
+	return s.ClientID
 }
 
-func (o *Security) GetClientSecret() string {
-	if o == nil {
+func (s *Security) GetClientSecret() string {
+	if s == nil {
 		return ""
 	}
-	return o.ClientSecret
+	return s.ClientSecret
 }
 
-func (o *Security) GetTokenURL() string {
-	return "/oauth/token"
+func (s *Security) GetTokenURL() string {
+	if s == nil {
+		return ""
+	}
+	return s.TokenURL
 }
