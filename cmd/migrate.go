@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"github.com/formancehq/go-libs/v2/bun/bunmigrate"
-	"github.com/formancehq/go-libs/v2/logging"
+	"github.com/hanzo-fi/go-libs/v2/bun/bunmigrate"
+	"github.com/hanzo-fi/go-libs/v2/logging"
 	"github.com/uptrace/bun"
 
-	"github.com/formancehq/webhooks/cmd/flag"
-	"github.com/formancehq/webhooks/pkg/storage"
+	"github.com/hanzo-fi/webhooks/cmd/flag"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 	"github.com/spf13/cobra"
 )
 

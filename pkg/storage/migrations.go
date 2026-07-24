@@ -3,10 +3,10 @@ package storage
 import (
 	"context"
 
-	webhooks "github.com/formancehq/webhooks/pkg"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
 	"github.com/pkg/errors"
 
-	"github.com/formancehq/go-libs/v2/migrations"
+	"github.com/hanzo-fi/go-libs/v2/migrations"
 	"github.com/uptrace/bun"
 )
 

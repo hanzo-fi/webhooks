@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/webhooks/pkg/storage"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 )
 
 const (

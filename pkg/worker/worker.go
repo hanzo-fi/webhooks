@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/alitto/pond"
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/go-libs/v2/publish"
-	webhooks "github.com/formancehq/webhooks/pkg"
-	"github.com/formancehq/webhooks/pkg/storage"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/go-libs/v2/publish"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )

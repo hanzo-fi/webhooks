@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	webhooks "github.com/formancehq/webhooks/pkg"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
 	"github.com/pkg/errors"
 )
 

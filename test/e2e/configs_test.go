@@ -3,19 +3,19 @@
 package test_suite
 
 import (
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/go-libs/v2/testing/platform/pgtesting"
-	"github.com/formancehq/webhooks/pkg/client/models/components"
-	"github.com/formancehq/webhooks/pkg/client/models/operations"
-	"github.com/formancehq/webhooks/pkg/client/models/sdkerrors"
-	"github.com/formancehq/webhooks/pkg/testserver"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/go-libs/v2/testing/platform/pgtesting"
+	"github.com/hanzo-fi/webhooks/pkg/client/models/components"
+	"github.com/hanzo-fi/webhooks/pkg/client/models/operations"
+	"github.com/hanzo-fi/webhooks/pkg/client/models/sdkerrors"
+	"github.com/hanzo-fi/webhooks/pkg/testserver"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 
-	webhooks "github.com/formancehq/webhooks/pkg"
-	"github.com/formancehq/webhooks/pkg/security"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
+	"github.com/hanzo-fi/webhooks/pkg/security"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )

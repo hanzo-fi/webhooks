@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/webhooks/pkg/metrics"
-	"github.com/formancehq/webhooks/pkg/security"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/webhooks/pkg/metrics"
+	"github.com/hanzo-fi/webhooks/pkg/security"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 )

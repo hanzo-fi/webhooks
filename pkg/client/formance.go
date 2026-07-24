@@ -5,10 +5,10 @@ package client
 import (
 	"context"
 	"fmt"
-	"github.com/formancehq/webhooks/pkg/client/internal/hooks"
-	"github.com/formancehq/webhooks/pkg/client/internal/utils"
-	"github.com/formancehq/webhooks/pkg/client/models/components"
-	"github.com/formancehq/webhooks/pkg/client/retry"
+	"github.com/hanzo-fi/webhooks/pkg/client/internal/hooks"
+	"github.com/hanzo-fi/webhooks/pkg/client/internal/utils"
+	"github.com/hanzo-fi/webhooks/pkg/client/models/components"
+	"github.com/hanzo-fi/webhooks/pkg/client/retry"
 	"net/http"
 	"time"
 )
@@ -145,7 +145,7 @@ func New(opts ...SDKOption) *Formance {
 			OpenAPIDocVersion: "WEBHOOKS_VERSION",
 			SDKVersion:        "0.2.1",
 			GenVersion:        "2.384.1",
-			UserAgent:         "speakeasy-sdk/go 0.2.1 2.384.1 WEBHOOKS_VERSION github.com/formancehq/webhooks/pkg/client",
+			UserAgent:         "speakeasy-sdk/go 0.2.1 2.384.1 WEBHOOKS_VERSION github.com/hanzo-fi/webhooks/pkg/client",
 			Hooks:             hooks.New(),
 		},
 	}

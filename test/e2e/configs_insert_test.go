@@ -3,11 +3,11 @@
 package test_suite
 
 import (
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/go-libs/v2/testing/platform/pgtesting"
-	"github.com/formancehq/webhooks/pkg/client/models/components"
-	"github.com/formancehq/webhooks/pkg/client/models/sdkerrors"
-	"github.com/formancehq/webhooks/pkg/testserver"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/go-libs/v2/testing/platform/pgtesting"
+	"github.com/hanzo-fi/webhooks/pkg/client/models/components"
+	"github.com/hanzo-fi/webhooks/pkg/client/models/sdkerrors"
+	"github.com/hanzo-fi/webhooks/pkg/testserver"
 	"time"
 
 	"github.com/google/uuid"

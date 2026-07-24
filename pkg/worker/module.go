@@ -16,11 +16,11 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/go-libs/v2/otlp/otlpmetrics"
-	"github.com/formancehq/go-libs/v2/publish"
-	webhooks "github.com/formancehq/webhooks/pkg"
-	"github.com/formancehq/webhooks/pkg/storage"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/go-libs/v2/otlp/otlpmetrics"
+	"github.com/hanzo-fi/go-libs/v2/publish"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 	"github.com/google/uuid"
 	"go.uber.org/fx"
 )

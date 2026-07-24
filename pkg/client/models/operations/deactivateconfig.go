@@ -3,7 +3,7 @@
 package operations
 
 import (
-	"github.com/formancehq/webhooks/pkg/client/models/components"
+	"github.com/hanzo-fi/webhooks/pkg/client/models/components"
 )
 
 type DeactivateConfigRequest struct {

@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	webhooks "github.com/formancehq/webhooks/pkg"
-	"github.com/formancehq/webhooks/pkg/backoff"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
+	"github.com/hanzo-fi/webhooks/pkg/backoff"
 )
 
 type fixedBackoff struct {

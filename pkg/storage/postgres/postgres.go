@@ -8,8 +8,8 @@ import (
 
 	"github.com/uptrace/bun/dialect/pgdialect"
 
-	webhooks "github.com/formancehq/webhooks/pkg"
-	"github.com/formancehq/webhooks/pkg/storage"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 )

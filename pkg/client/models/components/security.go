@@ -3,7 +3,7 @@
 package components
 
 import (
-	"github.com/formancehq/webhooks/pkg/client/internal/utils"
+	"github.com/hanzo-fi/webhooks/pkg/client/internal/utils"
 )
 
 type Security struct {

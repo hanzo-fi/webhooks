@@ -3,7 +3,7 @@ package backoff
 import (
 	"time"
 
-	webhooks "github.com/formancehq/webhooks/pkg"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
 )
 
 func NewNoRetry() webhooks.BackoffPolicy {

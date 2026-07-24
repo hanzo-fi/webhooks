@@ -1,17 +1,17 @@
-module github.com/formancehq/webhooks
+module github.com/hanzo-fi/webhooks
 
 go 1.25.0
 
-replace github.com/formancehq/webhooks/pkg/client => ./pkg/client
+replace github.com/hanzo-fi/webhooks/pkg/client => ./pkg/client
 
 require (
 	github.com/ThreeDotsLabs/watermill v1.5.1
 	github.com/alitto/pond v1.9.2
-	github.com/formancehq/go-libs/v2 v2.2.5
-	github.com/formancehq/go-libs/v5 v5.1.1-0.20260522083443-d2a60ed2e0dd
-	github.com/formancehq/webhooks/pkg/client v0.0.0-00010101000000-000000000000
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/google/uuid v1.6.0
+	github.com/hanzo-fi/go-libs/v2 v2.2.5
+	github.com/hanzo-fi/go-libs/v5 v5.6.2
+	github.com/hanzo-fi/webhooks/pkg/client v0.0.0-00010101000000-000000000000
 	github.com/onsi/ginkgo/v2 v2.28.1
 	github.com/onsi/gomega v1.39.1
 	github.com/pkg/errors v0.9.1

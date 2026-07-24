@@ -4,16 +4,16 @@ import (
 	"net/http"
 
 	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/formancehq/go-libs/v2/otlp"
+	"github.com/hanzo-fi/go-libs/v2/otlp"
 
 	"github.com/spf13/cobra"
 
-	"github.com/formancehq/go-libs/v2/auth"
-	"github.com/formancehq/webhooks/pkg/storage"
+	"github.com/hanzo-fi/go-libs/v2/auth"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 
-	"github.com/formancehq/go-libs/v2/httpserver"
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/go-libs/v2/otlp/otlptraces"
+	"github.com/hanzo-fi/go-libs/v2/httpserver"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/go-libs/v2/otlp/otlptraces"
 	"go.uber.org/fx"
 )
 

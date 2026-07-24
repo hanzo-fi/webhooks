@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	webhooks "github.com/formancehq/webhooks/pkg"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
 )
 
 var ErrMaxAttemptsReached = errors.New("max attempts reached")

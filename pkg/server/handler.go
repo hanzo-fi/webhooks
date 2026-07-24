@@ -6,12 +6,12 @@ import (
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/go-chi/chi/v5"
 
-	"github.com/formancehq/go-libs/v2/service"
-	"github.com/formancehq/go-libs/v5/pkg/audit/httpaudit"
+	"github.com/hanzo-fi/go-libs/v2/service"
+	"github.com/hanzo-fi/go-libs/v5/pkg/audit/httpaudit"
 
-	"github.com/formancehq/go-libs/v2/auth"
-	"github.com/formancehq/go-libs/v2/logging"
-	"github.com/formancehq/webhooks/pkg/storage"
+	"github.com/hanzo-fi/go-libs/v2/auth"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 )
 
 const (

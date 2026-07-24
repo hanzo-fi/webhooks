@@ -4,8 +4,8 @@ package operations
 
 import (
 	"errors"
-	"github.com/formancehq/webhooks/pkg/client/internal/utils"
-	"github.com/formancehq/webhooks/pkg/client/retry"
+	"github.com/hanzo-fi/webhooks/pkg/client/internal/utils"
+	"github.com/hanzo-fi/webhooks/pkg/client/retry"
 	"time"
 )
 

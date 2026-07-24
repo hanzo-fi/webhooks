@@ -6,12 +6,12 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/formancehq/go-libs/v2/api"
-	"github.com/formancehq/go-libs/v2/logging"
-	webhooks "github.com/formancehq/webhooks/pkg"
-	"github.com/formancehq/webhooks/pkg/backoff"
-	"github.com/formancehq/webhooks/pkg/server/apierrors"
-	"github.com/formancehq/webhooks/pkg/storage"
+	"github.com/hanzo-fi/go-libs/v2/api"
+	"github.com/hanzo-fi/go-libs/v2/logging"
+	webhooks "github.com/hanzo-fi/webhooks/pkg"
+	"github.com/hanzo-fi/webhooks/pkg/backoff"
+	"github.com/hanzo-fi/webhooks/pkg/server/apierrors"
+	"github.com/hanzo-fi/webhooks/pkg/storage"
 	"github.com/google/uuid"
 )
 

@@ -3,26 +3,26 @@ package cmd
 import (
 	"net/http"
 
-	"github.com/formancehq/go-libs/v2/otlp"
+	"github.com/hanzo-fi/go-libs/v2/otlp"
 
-	"github.com/formancehq/go-libs/v2/auth"
-	"github.com/formancehq/go-libs/v2/aws/iam"
-	"github.com/formancehq/go-libs/v2/publish"
+	"github.com/hanzo-fi/go-libs/v2/auth"
+	"github.com/hanzo-fi/go-libs/v2/aws/iam"
+	"github.com/hanzo-fi/go-libs/v2/publish"
 
-	"github.com/formancehq/webhooks/pkg/storage/postgres"
+	"github.com/hanzo-fi/webhooks/pkg/storage/postgres"
 
-	"github.com/formancehq/go-libs/v2/bun/bunconnect"
-	"github.com/formancehq/go-libs/v2/licence"
+	"github.com/hanzo-fi/go-libs/v2/bun/bunconnect"
+	"github.com/hanzo-fi/go-libs/v2/licence"
 
-	"github.com/formancehq/go-libs/v2/otlp/otlpmetrics"
-	"github.com/formancehq/go-libs/v2/otlp/otlptraces"
+	"github.com/hanzo-fi/go-libs/v2/otlp/otlpmetrics"
+	"github.com/hanzo-fi/go-libs/v2/otlp/otlptraces"
 
-	"github.com/formancehq/go-libs/v2/httpserver"
-	"github.com/formancehq/go-libs/v2/service"
-	"github.com/formancehq/webhooks/cmd/flag"
-	"github.com/formancehq/webhooks/pkg/backoff"
-	innerotlp "github.com/formancehq/webhooks/pkg/otlp"
-	"github.com/formancehq/webhooks/pkg/worker"
+	"github.com/hanzo-fi/go-libs/v2/httpserver"
+	"github.com/hanzo-fi/go-libs/v2/service"
+	"github.com/hanzo-fi/webhooks/cmd/flag"
+	"github.com/hanzo-fi/webhooks/pkg/backoff"
+	innerotlp "github.com/hanzo-fi/webhooks/pkg/otlp"
+	"github.com/hanzo-fi/webhooks/pkg/worker"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )

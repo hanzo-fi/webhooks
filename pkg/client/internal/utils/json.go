@@ -13,7 +13,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/formancehq/webhooks/pkg/client/types"
+	"github.com/hanzo-fi/webhooks/pkg/client/types"
 
 	"github.com/ericlagergren/decimal"
 )
